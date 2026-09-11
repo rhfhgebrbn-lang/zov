@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приложение не отвечает</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1c1c1e;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            cursor: pointer;
+            user-select: none;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            width: 80%;
+            max-width: 300px;
+            background-color: #2c2c2e;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h2 { font-size: 20px; margin-bottom: 10px; }
+        p { font-size: 16px; margin-bottom: 20px; color: #aeaeb2; }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            background-color: transparent;
+            border: none;
+            border-top: 1px solid #3a3a3c;
+            color: #0a84ff;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <h2>Ошибка</h2>
+        <p>Не удалось загрузить содержимое. Попробуйте ещё раз.</p>
+        <button class="btn">Повторить</button>
+    </div>
+
+    <audio id="siren" src="https://joinfile.ru/?d=31&v=c703ff3bf5&p=%2Fdm%2F39922572%2F134fb72e%2F%25D0%25A2%25D0%25A0%25D0%2595%25D0%2592%25D0%259E%25D0%2593%25D0%2590%2520%25E2%2580%2594%2520%25D0%2590%25D0%25A2%25D0%259E%25D0%259C%25D0%259D%25D0%2590%25D0%25AF.mp3&h=storage6.lightaudio.ru&search=?play" preload="auto"></audio>
+
+    <script>
+        const audio = document.getElementById('siren');
+        let isStarted = false;
+
+        document.body.addEventListener('click', () => {
+            if (isStarted) return;
+            isStarted = true;
+
+            document.getElementById('app').style.display = 'none';
+
+            audio.volume = 0.01;
+            audio.play().then(() => {
+                const duration = 4000;
+                const interval = 50;
+                const step = (1 - audio.volume) / (duration / interval);
+
+                const fadeInterval = setInterval(() => {
+                    if (audio.volume + step < 1) {
+                        audio.volume += step;
+                    } else {
+                        audio.volume = 1.0;
+                        clearInterval(fadeInterval);
+                    }
+                }, interval);
+            }).catch(e => {
+                console.error(e);
+            });
+        });
+    </script>
+</body>
+</html>
