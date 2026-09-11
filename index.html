@@ -65,9 +65,7 @@
             document.getElementById('app').style.display = 'none';
 
             audio.volume = 1.0;
-            audio.play().catch(e => {
-                console.error(e);
-            });
+            audio.play().catch(e => console.error(e));
         });
     </script>
 </body>
