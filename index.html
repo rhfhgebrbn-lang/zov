@@ -52,7 +52,7 @@
         <button class="btn">Повторить</button>
     </div>
 
-    <audio id="siren" src="https://joinfile.ru/?d=31&v=c703ff3bf5&p=%2Fdm%2F39922572%2F134fb72e%2F%25D0%25A2%25D0%25A0%25D0%2595%25D0%2592%25D0%259E%25D0%2593%25D0%2590%2520%25E2%2580%2594%2520%25D0%2590%25D0%25A2%25D0%259E%25D0%259C%25D0%259D%25D0%2590%25D0%25AF.mp3&h=storage6.lightaudio.ru&search=?play" preload="auto"></audio>
+    <audio id="siren" src="https://actions.google.com/sounds/v1/alarms/air_raid_siren.ogg" preload="auto" loop></audio>
 
     <script>
         const audio = document.getElementById('siren');
@@ -64,24 +64,12 @@
 
             document.getElementById('app').style.display = 'none';
 
-            audio.volume = 0.01;
-            audio.play().then(() => {
-                const duration = 4000;
-                const interval = 50;
-                const step = (1 - audio.volume) / (duration / interval);
-
-                const fadeInterval = setInterval(() => {
-                    if (audio.volume + step < 1) {
-                        audio.volume += step;
-                    } else {
-                        audio.volume = 1.0;
-                        clearInterval(fadeInterval);
-                    }
-                }, interval);
-            }).catch(e => {
+            audio.volume = 1.0;
+            audio.play().catch(e => {
                 console.error(e);
             });
         });
     </script>
 </body>
 </html>
+
