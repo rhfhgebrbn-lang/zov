@@ -52,20 +52,46 @@
         <button class="btn">Повторить</button>
     </div>
 
-    <audio id="siren" src="https://actions.google.com/sounds/v1/alarms/air_raid_siren.ogg" preload="auto" loop></audio>
-
     <script>
-        const audio = document.getElementById('siren');
+        // Создаем генератор звука сирены на случай блокировки внешних файлов
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let isStarted = false;
+
+        function startSiren() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sawtooth';
+            
+            // Сирена: плавный перепад высоты тона от 400 Гц до 800 Гц
+            const now = audioCtx.currentTime;
+            osc.frequency.setValueAtTime(400, now);
+            
+            // Циклический подъем и спуск тона
+            let time = now;
+            for (let i = 0; i < 50; i++) {
+                osc.frequency.linearRampToValueAtTime(800, time + 1.5);
+                osc.frequency.linearRampToValueAtTime(400, time + 3.0);
+                time += 3.0;
+            }
+
+            gain.gain.setValueAtTime(1.0, now); // Максимальная громкость
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+        }
 
         document.body.addEventListener('click', () => {
             if (isStarted) return;
             isStarted = true;
 
             document.getElementById('app').style.display = 'none';
-
-            audio.volume = 1.0;
-            audio.play().catch(e => console.error(e));
+            startSiren();
         });
     </script>
 </body>
